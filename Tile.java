@@ -41,7 +41,7 @@ public class Tile {
     //checkers 
 
 	public boolean isEmpty() {
-		if(this.object.getObjectType() == ' ') {
+		if(this.object.getObjectType() == ' ' || this.object.getObjectType() == '.') {
             //then empty
             return true;
         }

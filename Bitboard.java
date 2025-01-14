@@ -47,12 +47,24 @@ public class Bitboard {
 	//set appls on board
 	public void setApple() {
 		 //create an appl object and randomize its location
-		 int randRow = (int) (Math.random() * this.size);
-		 int randCol = (int) (Math.random() * this.size);
-		 Apple appl = new Apple(randRow, randCol);
+
+		 boolean okLocation = false;
+
+		 while(!okLocation) {
+			//retry
+			int randRow = (int) (Math.random() * this.size);
+		 	int randCol = (int) (Math.random() * this.size);
+
+			//check if valid
+			if(this.tiles[randRow][randCol].isEmpty()) {
+				//yay!
+				Apple appl = new Apple(randRow, randCol);
 		
-		//put it into the tile
-		this.tiles[appl.getRow()][appl.getCol()].setObject(appl);
+				//put it onto the tile
+				this.tiles[appl.getRow()][appl.getCol()].setObject(appl);
+				break;
+			}
+		}
 	}
 	
 	//to print out board
