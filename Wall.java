@@ -4,6 +4,4 @@ public class Wall extends GameObject {
         //call to super
         super('*', row, col);
     }
-
-    //wall interaction
 }
