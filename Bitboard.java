@@ -44,10 +44,38 @@ public class Bitboard {
         this.tiles[snake.getRow()][snake.getCol()].setObject(snake);
     }
 
+	public void addSnake(Snake snake, char lastDirection) {
+		//add a part
+		 //add a snake object behind current snake
+		 switch(lastDirection) {
+            
+            case 'w':
+                //if last direction was up, create and spawn new part directly below
+                Snake belowSnake = new Snake(snake.getRow()+1, snake.getCol());
+				//add to board
+				this.tiles[belowSnake.getRow()][belowSnake.getCol()].setObject(belowSnake);
+                break;
+            case 'a':
+                Snake rightSnake = new Snake(snake.getRow(), snake.getCol()+1);
+				this.tiles[rightSnake.getRow()][rightSnake.getCol()].setObject(rightSnake);
+                break;
+            case 's':
+                Snake aboveSnake = new Snake(snake.getRow()-1, snake.getCol());
+				this.tiles[aboveSnake.getRow()][aboveSnake.getCol()].setObject(aboveSnake);
+                break;
+            case 'd':
+                Snake leftSnake = new Snake(snake.getRow(), snake.getCol()-1);
+				this.tiles[leftSnake.getRow()][leftSnake.getCol()].setObject(leftSnake);
+                break;
+            default:
+                //fo
+                break;
+        }
+	}
+
 	//set appls on board
 	public void setApple() {
 		 //create an appl object and randomize its location
-
 		 boolean okLocation = false;
 
 		 while(!okLocation) {

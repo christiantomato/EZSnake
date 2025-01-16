@@ -2,15 +2,17 @@ import java.util.Scanner;
 
 public class Main {
 
+    public static int applEaten = 0;
+
     public static void main(String[] args) {
         //initialize all the game stuffs
 
         //init board
         Bitboard myBoard = new Bitboard(9);
         //init snake
-        Snake mySnake = new Snake(4, 4);
+        SnakeParts mySnake = new SnakeParts(4, 4, myBoard.getSize());
         //put on board
-        myBoard.setSnake(mySnake);
+        myBoard.setSnake(mySnake.getHead());
         //init appl
         myBoard.setApple();
 
@@ -22,27 +24,29 @@ public class Main {
 
         while (running) {
             //print new state of board
+            System.out.println("Appls eaten: " + Main.applEaten);
 			System.out.print(myBoard);
 
             try {
                 //get input from player to move and record it
                 char input = scanner.nextLine().charAt(0);
 
-                switch (input) {
+                switch(input) {
             
                     case 'w':
-                        mySnake.moveUp(myBoard);
+                        //move up
+                        mySnake.getHead().moveUp(myBoard);
                         break;
                     case 'a':
-                        mySnake.moveLeft(myBoard);
+                        mySnake.getHead().moveLeft(myBoard);
                         break;
                     case 's':
-                        mySnake.moveDown(myBoard);
+                        mySnake.getHead().moveDown(myBoard);
                         break;
                     case 'd':
-                        mySnake.moveRight(myBoard);
+                        mySnake.getHead().moveRight(myBoard);
                         break;
-                    case 'o':
+                    case 't':
                         //end game
                         running = false;
                         System.out.println("\nTerminated\n");
@@ -50,44 +54,38 @@ public class Main {
                     default:
                         //for misinputs
                         System.out.println("\npress w, a, s, or d");
-                        break;
                 }
 
                 //check interactions
 
                 //is the snake now on a wall tile
-                if(myBoard.getTiles()[mySnake.getRow()][mySnake.getCol()].isWall()) {
+                if(myBoard.getTiles()[mySnake.getHead().getRow()][mySnake.getHead().getCol()].isWall()) {
                     //bro you died
                     System.out.println("\nHOLD IT RIGHT THERE BUDDY!!!\n");
                     //end
                     break;
                 }
 
+                //if snake is on snake tile (not good)
+                else if(myBoard.getTiles()[mySnake.getHead().getRow()][mySnake.getHead().getCol()].isSnake()) {
+                    //bro you died
+                    System.out.println("HOLD IT RIGHT THERE BUDDY!!!\n");
+                    //end
+                    break;
+                }
+
                 //appl interaction
-                else if(myBoard.getTiles()[mySnake.getRow()][mySnake.getCol()].isApple()) {
+                else if(myBoard.getTiles()[mySnake.getHead().getRow()][mySnake.getHead().getCol()].isApple()) {
+                    //hey you ate an appl
+                    Main.applEaten++;
                     //new appl
                     myBoard.setApple();
+                    //new part
+                    myBoard.addSnake(mySnake.getHead(), input);
                 }
 
-                //move snake
-
-                //make the tile the previous snake was on empty
-                if(input == 'w') {
-                    //clear prev tile
-                    myBoard.getTiles()[mySnake.getRow()+1][mySnake.getCol()].setEmpty();
-                }
-                else if(input == 'a') {
-                    myBoard.getTiles()[mySnake.getRow()][mySnake.getCol()+1].setEmpty();
-                }
-                else if(input == 's') {
-                    myBoard.getTiles()[mySnake.getRow()-1][mySnake.getCol()].setEmpty();
-                }
-                else if(input == 'd') {
-                    myBoard.getTiles()[mySnake.getRow()][mySnake.getCol()-1].setEmpty();
-                }
-            
-                //set the board with the new position of the snake
-                myBoard.getTiles()[mySnake.getRow()][mySnake.getCol()].setObject(mySnake);
+                //set the board with the new position of the snake head now
+                myBoard.getTiles()[mySnake.getHead().getRow()][mySnake.getHead().getCol()].setObject(mySnake.getHead());
             }
 
             //catch any blank inputs
