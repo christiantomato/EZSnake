@@ -1,17 +1,35 @@
 public class Snake extends GameObject {
 
+    int prevRow, prevCol;
+
     //constructor for snake head
     public Snake(int row, int col) {
         //set its char type
         super('O', row, col);
     }
 
-    //move methods
+    public int getPrevRow() {
+        return this.prevRow;
+    }
+
+    public int getPrevCol() {
+        return this.prevCol;
+    }
+    
+    public void setPrevPosition(int row, int col) {
+        this.prevRow = row;
+        this.prevCol = col;
+    }
+
+    //move methods for head
 
     public void moveUp(Bitboard board) {
-
-        //set tile empty first?
+        //set previous
+        this.prevRow = this.getRow();
+        this.prevCol = this.getCol();
+        //set empty
         board.getTiles()[this.getRow()][this.getCol()].setEmpty();
+        //move it
         this.setRow(this.getRow() - 1);
 
         //board.getTiles()[this.getRow()][this.getCol()].setEmpty();
@@ -20,6 +38,8 @@ public class Snake extends GameObject {
 
     public void moveLeft(Bitboard board) {
         //move snake's pos.
+        this.prevRow = this.getRow();
+        this.prevCol = this.getCol();
         board.getTiles()[this.getRow()][this.getCol()].setEmpty();
         this.setCol(this.getCol() - 1);
 
@@ -30,6 +50,8 @@ public class Snake extends GameObject {
     }
  
     public void moveDown(Bitboard board) {
+        this.prevRow = this.getRow();
+        this.prevCol = this.getCol();
         board.getTiles()[this.getRow()][this.getCol()].setEmpty();
         this.setRow(this.getRow() + 1);
 
@@ -38,6 +60,8 @@ public class Snake extends GameObject {
     }
 
     public void moveRight(Bitboard board) {
+        this.prevRow = this.getRow();
+        this.prevCol = this.getCol();
         board.getTiles()[this.getRow()][this.getCol()].setEmpty();
         this.setCol(this.getCol() + 1);
 
