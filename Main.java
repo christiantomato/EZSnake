@@ -10,9 +10,9 @@ public class Main {
         //init board
         Bitboard myBoard = new Bitboard(9);
         //init snake
-        SnakeParts mySnake = new SnakeParts(4, 4, myBoard.getSize());
+        Snake mySnake = new Snake(4, 4);
         //put on board
-        myBoard.setSnake(mySnake.getHead());
+        myBoard.setSnake(mySnake);
         //init appl
         myBoard.setApple();
 
@@ -23,9 +23,15 @@ public class Main {
         boolean running = true;
 
         while (running) {
+            //for debugging
+            System.out.println(mySnake + "\n");
             //print new state of board
             System.out.println("Appls eaten: " + Main.applEaten);
 			System.out.print(myBoard);
+
+            //before moving keep track of where head was before 
+            //int prevHeadRow = mySnake.getHead().getRow();
+            //int prevHeadCol = mySnake.getHead().getCol();
 
             try {
                 //get input from player to move and record it
@@ -35,16 +41,16 @@ public class Main {
             
                     case 'w':
                         //move up
-                        mySnake.getHead().moveUp(myBoard);
+                        mySnake.moveUp(myBoard);
                         break;
                     case 'a':
-                        mySnake.getHead().moveLeft(myBoard);
+                        mySnake.moveLeft(myBoard);
                         break;
                     case 's':
-                        mySnake.getHead().moveDown(myBoard);
+                        mySnake.moveDown(myBoard);
                         break;
                     case 'd':
-                        mySnake.getHead().moveRight(myBoard);
+                        mySnake.moveRight(myBoard);
                         break;
                     case 't':
                         //end game
@@ -59,38 +65,71 @@ public class Main {
                 //check interactions
 
                 //is the snake now on a wall tile
-                if(myBoard.getTiles()[mySnake.getHead().getRow()][mySnake.getHead().getCol()].isWall()) {
+                if(myBoard.getTiles()[mySnake.getRow()][mySnake.getCol()].isWall()) {
                     //bro you died
-                    System.out.println("\nHOLD IT RIGHT THERE BUDDY!!!\n");
+                    System.out.println("\ncollided wall\n");
                     //end
                     break;
                 }
 
                 //if snake is on snake tile (not good)
-                else if(myBoard.getTiles()[mySnake.getHead().getRow()][mySnake.getHead().getCol()].isSnake()) {
+                else if(myBoard.getTiles()[mySnake.getRow()][mySnake.getCol()].isSnake()) {
                     //bro you died
-                    System.out.println("HOLD IT RIGHT THERE BUDDY!!!\n");
+                    System.out.println("collided with self");
                     //end
                     break;
                 }
 
                 //appl interaction
-                else if(myBoard.getTiles()[mySnake.getHead().getRow()][mySnake.getHead().getCol()].isApple()) {
+                else if(myBoard.getTiles()[mySnake.getRow()][mySnake.getCol()].isApple()) {
                     //hey you ate an appl
                     Main.applEaten++;
+
+                    /*
+                    switch(input) {
+                        
+                        case 'w':
+                            //if last direction was up, create and spawn new part directly below
+                            Snake belowSnake = new Snake(mySnake.getHead().getRow()+1, mySnake.getHead().getCol());
+                            //add to our arraylist
+                            mySnake.add(belowSnake);
+                            //this.tiles[belowSnake.getRow()][belowSnake.getCol()].setObject(belowSnake);
+                            break;
+                        case 'a':
+                            Snake rightSnake = new Snake(mySnake.getHead().getRow(), mySnake.getHead().getCol()+1);
+                            mySnake.add(rightSnake);
+                            //this.tiles[rightSnake.getRow()][rightSnake.getCol()].setObject(rightSnake);
+                            break;
+                        case 's':
+                            Snake aboveSnake = new Snake(mySnake.getHead().getRow()-1, mySnake.getHead().getCol());
+                            mySnake.add(aboveSnake);
+                            //this.tiles[aboveSnake.getRow()][aboveSnake.getCol()].setObject(aboveSnake);
+                            break;
+                        case 'd':
+                            Snake leftSnake = new Snake(mySnake.getHead().getRow(), mySnake.getHead().getCol()-1);
+                            mySnake.add(leftSnake);
+                            //this.tiles[leftSnake.getRow()][leftSnake.getCol()].setObject(leftSnake);
+                            break;
+                        default:
+                            //fo
+                            break;
+                    } */
+
                     //new appl
                     myBoard.setApple();
-                    //new part
-                    myBoard.addSnake(mySnake.getHead(), input);
                 }
 
-                //set the board with the new position of the snake head now
-                myBoard.getTiles()[mySnake.getHead().getRow()][mySnake.getHead().getCol()].setObject(mySnake.getHead());
+                //set the board with the updated positions of snake
+                myBoard.getTiles()[mySnake.getRow()][mySnake.getCol()].setObject(mySnake);
+      
+
+                //clear screen to make look cleeaan :D
+                clearScreen();
             }
 
             //catch any blank inputs
             catch (java.lang.StringIndexOutOfBoundsException e) {
-                System.out.println("move bruv");
+                System.out.println("mooooveeee");
                 continue;
             }
 		}
@@ -102,4 +141,6 @@ public class Main {
         System.out.print("\033[H\033[2J");  
         System.out.flush();  
     }  
+
+
 }
